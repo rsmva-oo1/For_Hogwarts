@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nutri — AI Ovqatlanish Maslahatchisi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ── CSS Variables (Design Tokens) ─────────────────────── */
+    :root {
+      --bg: #0c1a12;
+      --bg2: #111f18;
+      --card: #162219;
+      --card2: #1c2e20;
+      --border: #2a3f2e;
+      --green: #4ade80;
+      --green2: #22c55e;
+      --green-dim: rgba(74, 222, 128, 0.12);
+      --green-glow: rgba(74, 222, 128, 0.25);
+      --text: #e8f5ea;
+      --text-dim: #7d9e84;
+      --text-muted: #4a6650;
+      --accent: #a3e635;
+      --warn: #fbbf24;
+      --error: #f87171;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background texture ──────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(74,222,128,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34,197,94,0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(12, 26, 18, 0.92);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      color: var(--green);
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-badge {
+      font-size: 0.7rem;
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before { content: '◆'; font-size: 0.5em; }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .hero-sub {
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── App Card ────────────────────────────────────────── */
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.4);
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Form ────────────────────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.03em;
+    }
+
+    input, select, textarea {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-glow);
+    }
+    select option { background: var(--bg2); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Button ──────────────────────────────────────────── */
+    .btn-primary {
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--green2);
+      color: #0c1a12;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--green);
+      box-shadow: 0 4px 24px rgba(74, 222, 128, 0.3);
+    }
+    .btn-primary:active:not(:disabled) { transform: scale(0.98); }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ── Loading State ───────────────────────────────────── */
+    #loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 40px 0;
+      text-align: center;
+    }
+    #loading.active { display: flex; }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+    .loading-text strong { color: var(--green); }
+
+    /* ── Error State ─────────────────────────────────────── */
+    #error-box {
+      display: none;
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      color: var(--error);
+      font-size: 0.88rem;
+      margin-top: 16px;
+    }
+    #error-box.active { display: block; }
+
+    /* ── Results Panel ───────────────────────────────────── */
+    #results {
+      display: none;
+      margin-top: 36px;
+      animation: fadeUp 0.5s ease both;
+    }
+    #results.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-intro {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: var(--green-dim);
+      border-left: 3px solid var(--green);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .result-intro strong { color: var(--text); }
+
+    .foods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .food-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .food-card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+    .food-num {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .food-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .food-reason {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .tip-box {
+      background: rgba(251, 191, 36, 0.07);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .tip-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warn);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tip-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .avoid-box {
+      background: rgba(248, 113, 113, 0.05);
+      border: 1px solid rgba(248, 113, 113, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .avoid-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--error);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .avoid-text {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .source-badge {
+      font-size: 0.72rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .source-badge.groq {
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid var(--border);
+      color: var(--green);
+    }
+    .source-badge.fallback {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      color: var(--warn);
+    }
+    .source-badge::before { content: '●'; font-size: 0.5em; }
+
+    /* ── How it works ────────────────────────────────────── */
+    .how-section {
+      padding: 60px 0;
+      border-top: 1px solid var(--border);
+    }
+    .how-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    .how-section .subtitle {
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .step {
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .step-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--green);
+      opacity: 0.4;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    footer strong { color: var(--text-dim); }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .app-card { padding: 24px 20px; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav>
+    <div class="logo">Nutri<span>.</span></div>
+    <div class="nav-badge">AI-powered · Free</div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <div class="container">
+    <section class="hero">
+      <div class="hero-eyebrow">Sun'iy intellekt asosida</div>
+      <h1>Sog'ligingizga mos<br /><em>ovqat maslahati</em></h1>
+      <p class="hero-sub">
+        Sog'lik holatingizni kiriting — AI sizga 3 ta tavsiya va 1 ta foydali maslahat beradi.
+        Diabet, gipertenziya, alleriya va boshqa holatlar uchun.
+      </p>
+    </section>
+
+    <!-- ── Main App Card ──────────────────────────────────── -->
+    <div class="app-card">
+      <div class="section-title">Sizning profilingiz</div>
+
+      <!-- Form -->
+      <form id="nutrition-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Ismingiz (ixtiyoriy)</label>
+            <input type="text" id="name" placeholder="Masalan: Jasur" />
+          </div>
+          <div class="field">
+            <label for="age">Yoshingiz (ixtiyoriy)</label>
+            <input type="number" id="age" placeholder="Masalan: 28" min="5" max="100" />
+          </div>
+          <div class="field">
+            <label for="condition">Sog'lik holatingiz *</label>
+            <select id="condition" required>
+              <option value="" disabled selected>— tanlang —</option>
+              <option value="healthy">Sog'lom (umumiy maslahat)</option>
+              <option value="diabetes">Qandli diabet</option>
+              <option value="hypertension">Gipertenziya (yuqori bosim)</option>
+              <option value="allergy_gluten">Gluten allergiyasi</option>
+              <option value="weight_loss">Vazn kamaytirish</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="goal">Maqsadingiz (ixtiyoriy)</label>
+            <input type="text" id="goal" placeholder="Masalan: energiya ko'paytirish" />
+          </div>
+          <div class="field full">
+            <label for="question">Qo'shimcha savol (ixtiyoriy)</label>
+            <textarea id="question" placeholder="Masalan: Nonushta uchun nima yeyishim kerak?"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submit-btn">
+          🥗 AI maslahat olish
+        </button>
+      </form>
+
+      <!-- Error Box -->
+      <div id="error-box"></div>
+
+      <!-- Loading State -->
+      <div id="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">
+          <strong>Tahlil qilinmoqda...</strong><br />
+          AI sizning profilingizni ko'rib chiqmoqda
+        </p>
+      </div>
+
+      <!-- Results -->
+      <div id="results">
+        <div class="section-title" style="margin-top: 32px;">Sizga maxsus tavsiyalar</div>
+
+        <div class="result-intro" id="result-intro"></div>
+
+        <div class="foods-grid" id="foods-grid"></div>
+
+        <div class="tip-box" id="tip-box" style="display:none">
+          <div class="tip-label">💡 Sog'lik maslahati</div>
+          <div class="tip-text" id="tip-text"></div>
+        </div>
+
+        <div class="avoid-box" id="avoid-box" style="display:none">
+          <div class="avoid-label">⚠️ Qoching</div>
+          <div class="avoid-text" id="avoid-text"></div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+          <span class="source-badge" id="source-badge"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── How It Works ─────────────────────────────────── -->
+    <section class="how-section">
+      <h2>Qanday ishlaydi?</h2>
+      <p class="subtitle">3 qadam — 30 soniya — shaxsiy maslahat</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title">Ma'lumot kiriting</div>
+          <div class="step-desc">Ismingiz, yoshingiz va sog'lik holatingizni belgilang.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title">AI tahlil qiladi</div>
+          <div class="step-desc">Groq LLM yoki mahalliy mantiq profilingizni ko'rib chiqadi.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title">Tavsiya olasiz</div>
+          <div class="step-desc">3 ta ovqat + 1 ta amaliy maslahat + qochish kerak bo'lgan mahsulotlar.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer>
+    <strong>Nutri</strong> — Node.js + Express + Groq AI bilan qurilgan · Talabalar loyihasi<br />
+    <span>⚠️ Bu tibbiy maslahat emas. Shifokoringiz bilan maslahatlashing.</span>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════
+       JAVASCRIPT — This is where the frontend talks to the backend
+       ════════════════════════════════════════════════════════ -->
+  <script>
+    // ── Configuration ─────────────────────────────────────
+    // Change this URL when you deploy the backend to production
+    // For local dev: http://localhost:3001
+    // For production: https://your-backend.onrender.com
+    const API_URL = "http://localhost:3001";
+
+    // ── DOM Elements ──────────────────────────────────────
+    const form        = document.getElementById("nutrition-form");
+    const submitBtn   = document.getElementById("submit-btn");
+    const loadingEl   = document.getElementById("loading");
+    const errorBox    = document.getElementById("error-box");
+    const resultsEl   = document.getElementById("results");
+
+    // ── Form Submit Handler ────────────────────────────────
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();  // Stop page from refreshing
+
+      // 1. Read form values
+      const profile = {
+        name:      document.getElementById("name").value.trim(),
+        age:       document.getElementById("age").value,
+        condition: document.getElementById("condition").value,
+        goal:      document.getElementById("goal").value.trim(),
+        question:  document.getElementById("question").value.trim(),
+      };
+
+      // 2. Validate
+      if (!profile.condition) {
+        showError("Iltimos, sog'lik holatingizni tanlang.");
+        return;
+      }
+
+      // 3. Show loading, hide old results/errors
+      setUIState("loading");
+
+      try {
+        // 4. Send request to backend
+        //    fetch() is the browser's built-in HTTP client
+        const response = await fetch(`${API_URL}/api/nutrition`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",  // Tell server we're sending JSON
+          },
+          body: JSON.stringify(profile),          // Convert JS object → JSON string
+        });
+
+        // 5. Parse response
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Server xatosi yuz berdi.");
+        }
+
+        // 6. Display results
+        displayResults(result.data);
+        setUIState("results");
+
+      } catch (err) {
+        // Network error (backend not running, CORS issue, etc.)
+        const isNetworkError = err.message.includes("fetch") || err.message.includes("Failed");
+        showError(
+          isNetworkError
+            ? "Backend serveriga ulanib bo'lmadi. Server ishlaayotganini tekshiring (npm run dev)."
+            : err.message
+        );
+        setUIState("error");
+      }
+    });
+
+    // ── UI State Manager ───────────────────────────────────
+    // Keeps loading/error/results states clean and mutually exclusive
+    function setUIState(state) {
+      loadingEl.classList.remove("active");
+      errorBox.classList.remove("active");
+      resultsEl.classList.remove("active");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "🥗 AI maslahat olish";
+
+      if (state === "loading") {
+        loadingEl.classList.add("active");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Tahlil qilinmoqda...";
+      } else if (state === "error") {
+        errorBox.classList.add("active");
+      } else if (state === "results") {
+        resultsEl.classList.add("active");
+        // Smooth scroll to results
+        resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    // ── Error Display ──────────────────────────────────────
+    function showError(msg) {
+      errorBox.textContent = "⚠️ " + msg;
+    }
+
+    // ── Results Renderer ───────────────────────────────────
+    // Takes the data object from the backend and builds the UI
+    function displayResults(data) {
+      // Intro text — render basic markdown bold (**text**)
+      const introEl = document.getElementById("result-intro");
+      introEl.innerHTML = data.intro
+        ? data.intro.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        : "Tavsiyalaringiz tayyor!";
+
+      // Food cards
+      const grid = document.getElementById("foods-grid");
+      grid.innerHTML = "";
+      if (data.foods && data.foods.length > 0) {
+        data.foods.forEach((food, i) => {
+          const card = document.createElement("div");
+          card.className = "food-card";
+          card.innerHTML = `
+            <div class="food-num">Tavsiya #${i + 1}</div>
+            <div class="food-name">${escHtml(food.name)}</div>
+            <div class="food-reason">${escHtml(food.reason)}</div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      // Health tip
+      const tipBox = document.getElementById("tip-box");
+      const tipText = document.getElementById("tip-text");
+      if (data.tip) {
+        tipText.textContent = data.tip;
+        tipBox.style.display = "block";
+      } else {
+        tipBox.style.display = "none";
+      }
+
+      // Foods to avoid
+      const avoidBox = document.getElementById("avoid-box");
+      const avoidText = document.getElementById("avoid-text");
+      const avoidContent = data.avoidSection || "";
+      if (avoidContent && avoidContent.trim()) {
+        avoidText.textContent = avoidContent.replace(/⚠️ \*\*Foods to avoid:\*\* /i, "");
+        avoidBox.style.display = "block";
+      } else {
+        avoidBox.style.display = "none";
+      }
+
+      // Source badge (shows if response came from AI or fallback)
+      const badge = document.getElementById("source-badge");
+      if (data.source === "groq") {
+        badge.textContent = "● Groq AI tomonidan";
+        badge.className = "source-badge groq";
+      } else {
+        badge.textContent = "● Mahalliy ma'lumotlar asosida";
+        badge.className = "source-badge fallback";
+      }
+    }
+
+    // ── Security Helper ────────────────────────────────────
+    // Always escape user-generated text before inserting into HTML
+    // This prevents XSS (Cross-Site Scripting) attacks
+    function escHtml(str) {
+      const div = document.createElement("div");
+      div.appendChild(document.createTextNode(String(str)));
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
