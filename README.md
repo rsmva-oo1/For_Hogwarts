@@ -9,8 +9,8 @@ Loyiha ildiz papkasida .env.local faylini yarating va quyidagi o'zgaruvchini qo'
 4. ## Loyihani yurgizish
 Endi brauzerda http://localhost:3000 manziliga kiring.
 
-🛡 Xavfsizlik
+### 🛡 Xavfsizlik
 Ushbu loyihada API kalitlari Environment Variables yordamida himoyalangan. Kalitlar hech qachon klient (frontend) tomonida ko'rinmaydi va .gitignore fayli orqali GitHub-ga chiqib ketishi oldi olingan.
 
-📄 Dokumentatsiya
+### 📄 Dokumentatsiya
 Loyihaning batafsil tahlili, LLM ishlash prinsipi va duch kelingan muammolar haqida ma'lumot olish uchun loyiha ichidagi Documentation.pdf fayli bilan tanishib chiqing.
