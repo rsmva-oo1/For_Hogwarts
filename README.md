@@ -25,8 +25,7 @@ git clone https://github.com/your-username/nutri.git
 cd nutri
 2️⃣ Install Dependencies
 Bash
-npm install
-# or
+npm install or
 yarn install
 3️⃣ Configure Environment Variables
 Create a .env.local file in the root directory and add your Groq API key:
