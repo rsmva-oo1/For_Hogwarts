@@ -1,6 +1,6 @@
 # For_Hogwarts
-1## Faylni yuklash
-2.## Kutubxonalarni o'rnatish
+## 1 Faylni yuklash
+## 2. Kutubxonalarni o'rnatish
 3. ## Environment Variables (.env) sozlash
 Loyiha ildiz papkasida .env.local faylini yarating va quyidagi o'zgaruvchini qo'shing:
 
