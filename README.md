@@ -1,7 +1,7 @@
 # For_Hogwarts
 # 🥗 Nutri: AI-Powered Personalized Nutrition Platform
 ## 🌟 Overview
-### Nutri is an innovative, AI-driven platform designed to personalize the dining and food-ordering experience. By leveraging the power of Large Language Models (LLMs), Nutri analyzes a user’s health profile—such as diabetes, hypertension, or allergies—to recommend safe, nutritious, and delicious meal options.
+### Nutri is an innovative, AI-driven platform designed to personalize the dining and food-ordering experience. By leveraging the power of Large Language Models (LLMs), Nutri analyzes a user’s health profile—such as diabetes, hypertension, or allergies—to recommend safe, nutritious, and delicious meal options
 
 #### Mission: To empower individuals with dietary restrictions to make safe and healthy food choices with the help of Artificial Intelligence.
 
@@ -32,7 +32,7 @@ Create a .env.local file in the root directory and add your Groq API key:
 
 Code snippet
 GROQ_API_KEY=your_actual_api_key_here
-Note: For security reasons, the .env file is excluded from version control.
+<b>Note: For security reasons, the .env file is excluded from version control.</b>
 
 4️⃣ Run the Development Server
 Bash
