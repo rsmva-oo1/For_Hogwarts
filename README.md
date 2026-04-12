@@ -22,11 +22,11 @@ Follow these steps to set up the project locally:
 1️⃣ Clone the Repository
 Bash
 git clone https://github.com/your-username/nutri.git
-cd nutri
+cd nutri <br>
 2️⃣ Install Dependencies
 Bash
 npm install or
-yarn install
+yarn install<br>
 3️⃣ Configure Environment Variables
 Create a .env.local file in the root directory and add your Groq API key:
 
