@@ -31,13 +31,13 @@ yarn install<br>
 Create a .env.local file in the root directory and add your Groq API key:
 
 Code snippet
-GROQ_API_KEY=your_actual_api_key_here
-<b>Note: For security reasons, the .env file is excluded from version control.</b>
+GROQ_API_KEY=your_actual_api_key_here<br>
+### <b>Note: For security reasons, the .env file is excluded from version control.</b> <br>
 
 4️⃣ Run the Development Server
 Bash
 npm run dev
-Open http://localhost:3000 in your browser to see the result.
+Open http://localhost:3000 in your browser to see the result.<br>
 
 ## 🛡 Security & API Protection
 Security is a core priority in Nutri:
